@@ -37,7 +37,45 @@ type winner struct {
 	time float64
 }
 
+type person struct {
+	name string
+
+	age int
+
+	gender string
+
+	addressdetails addressdetails
+}
+type addressdetails struct {
+	number string
+
+	streetname string
+
+	city string
+}
+
+type concert struct {
+	time string
+
+	name string
+
+	venue string
+}
+
 func main() {
+
+	j := person{
+		name:   "Bruno Mars",
+		age:    28,
+		gender: "male",
+
+		addressdetails: addressdetails{
+			number:     "987B",
+			streetname: "Hunter Street",
+			city:       "Shallowville, Sydney",
+		},
+	}
+	fmt.Printf("%+v\n", j)
 
 	h := boatrace{
 		name:   "Fierce Sailing",
@@ -48,7 +86,7 @@ func main() {
 			time:  0.987,
 		},
 	}
-	fmt.Printf("%+v", h)
+	fmt.Printf("%+v\n", h)
 
 	var s dcactionheros
 
@@ -56,7 +94,7 @@ func main() {
 	s.age = 34
 	s.colour = "red and white"
 	s.address = "4 Superman Avenue, Superville"
-	fmt.Printf("%+v", s)
+	fmt.Printf("%+v\n", s)
 
 	var n netflixshows
 
@@ -64,10 +102,13 @@ func main() {
 
 	n.rating = 100
 
-	fmt.Printf("%+v/n", n)
+	fmt.Printf("%v\n", n)
+
+	fmt.Printf("%v\n", performance("8:00pm"))
 
 	lion, tiger := panda()
-	fmt.Println(lion, tiger)
+	fmt.Println(lion)
+	fmt.Println(tiger)
 
 	stringint("Loz", 420)
 
@@ -135,8 +176,18 @@ func panda() (x, y string) {
 	x = "Adrian is very cute"
 	y = "Lauren is awesome"
 	return
+
 }
 
 func stringint(a string, b int) {
-	fmt.Printf("Loz %s has %d boobs", a, b)
+	fmt.Printf("%s has %d boobs\n", a, b)
+}
+
+func performance(time string) concert {
+	f := concert{
+		time:  time,
+		name:  "Bruno Mars",
+		venue: "Allianz Stadium",
+	}
+	return f
 }
