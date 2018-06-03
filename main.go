@@ -1,15 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"math"
+	"reflect"
+	"strconv"
 )
-
-type netflixshows struct {
-	title string
-
-	rating float32
-}
 
 type dcactionheros struct {
 	name string
@@ -62,7 +60,171 @@ type concert struct {
 	venue string
 }
 
+type alcohol struct {
+	Name string
+	Ice  bool
+}
+
+type song struct {
+	Title string
+
+	Duration float64
+}
+
+type family struct {
+	Names string
+
+	Ages int
+
+	location location
+}
+
+type location struct {
+	Number int
+
+	Street string
+}
+
+type Sphere struct {
+	Radius float64
+}
+
+type Triangle struct {
+	Base   float64
+	Height float64
+}
+
+type Westworld struct {
+	Character string
+
+	Rating float64
+}
+
+func (tri *Triangle) changeBase() float64 {
+	return 0.5 * (tri.Base * tri.Height)
+}
+
+func (sph *Sphere) Volume() float64 {
+	return float64(4) * math.Pi * (sph.Radius * sph.Radius)
+}
+
+func (sph *Sphere) Areavolume() float64 {
+	thecubed := sph.Radius * sph.Radius * sph.Radius
+	return (float64(4) / float64(2)) * math.Pi * thecubed
+}
+
+func (wes *Westworld) overallRating() string {
+	robots := strconv.FormatFloat(wes.Rating, 'f', 1, 64)
+	return wes.Character + "," + robots
+}
+
+func (m *song) summary() string {
+
+	j := strconv.FormatFloat(m.Duration, 'f', 1, 64)
+	return m.Title + ", " + j
+
+}
+
+type robot interface {
+	Poweron() error
+}
+
+type T810 struct {
+	Name string
+}
+
+type R2D2 struct {
+	Broken bool
+}
+
+func (to *T810) Poweron() error {
+	return nil
+}
+
+func (rd *R2D2) Poweron() error {
+	return errors.New("R2D2 is powered on")
+	return nil
+}
+
+func Boot(ro robot) error {
+	return ro.Poweron()
+}
+
 func main() {
+
+	to := T810{
+		Name: "The Robert Defuser",
+	}
+
+	rd := R2D2{
+		Broken: false,
+	}
+
+	err := Boot(&to)
+
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("T810 is powered on")
+	}
+
+	err = Boot(&rd)
+
+	if err != nil {
+		fmt.Println("R2D2 is powered on")
+	} else {
+		fmt.Println(err)
+	}
+
+	tri := Triangle{Base: 5, Height: 3}
+	fmt.Println(tri.changeBase())
+
+	sph := Sphere{
+		Radius: 10,
+	}
+	fmt.Println(sph.Volume())
+	fmt.Println(sph.Areavolume())
+
+	wes := Westworld{
+		Character: "James",
+		Rating:    10.76,
+	}
+	fmt.Println("My favourite character in Westworld is", wes.Character, "and would rate him a", wes.Rating, "out of 10.76")
+
+	u := family{
+		Names: "Georgina, Craig, Steven, Bradley, Lauren",
+
+		Ages: 70,
+
+		location: location{
+			Number: 90,
+			Street: "Bald Head",
+		},
+	}
+	fmt.Printf("%+v\n", u)
+
+	m := song{
+		Title:    "I want to make love to you",
+		Duration: 3.45,
+	}
+	fmt.Println(m.summary())
+
+	var z bool
+	fmt.Println(reflect.TypeOf(z))
+
+	a := alcohol{
+		Name: "Rum",
+		Ice:  false,
+	}
+	w := alcohol{
+		Name: "Vodka",
+		Ice:  true,
+	}
+	if a != w {
+		fmt.Println("a has zero ice and w has ice")
+	}
+	fmt.Printf("%v\n", a)
+	fmt.Printf("%v\n", w)
 
 	j := person{
 		name:   "Bruno Mars",
@@ -96,14 +258,6 @@ func main() {
 	s.address = "4 Superman Avenue, Superville"
 	fmt.Printf("%+v\n", s)
 
-	var n netflixshows
-
-	n.title = "Game of Thrones"
-
-	n.rating = 100
-
-	fmt.Printf("%v\n", n)
-
 	fmt.Printf("%v\n", performance("8:00pm"))
 
 	lion, tiger := panda()
@@ -111,6 +265,9 @@ func main() {
 	fmt.Println(tiger)
 
 	stringint("Loz", 420)
+
+	var pool string
+	fmt.Println(reflect.TypeOf(pool))
 
 	var b bool
 	b = true
@@ -170,6 +327,30 @@ func main() {
 
 	}
 
+	shoes := make([]string, 4)
+	shoes[0] = "thongs"
+	shoes[1] = "sandals"
+	shoes[2] = "sandshoes"
+	shoes[3] = "high heels"
+	fmt.Printf("my favourite shoes are %v\n", shoes)
+
+	q := false
+	if q {
+		fmt.Println("q is true")
+	} else {
+		fmt.Println("q is false")
+	}
+	y := 100
+	if y >= 200 {
+		fmt.Println("y is more than 200")
+	} else if y <= 200 {
+		fmt.Println("y is less than 150")
+	}
+
+	roads := []int{1, 2, 3, 4, 5}
+	for i, r := range roads {
+		fmt.Println("I have", i, r, "roads")
+	}
 }
 
 func panda() (x, y string) {
