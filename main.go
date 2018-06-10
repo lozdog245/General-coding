@@ -194,18 +194,6 @@ func main() {
 	}
 	fmt.Println("My favourite character in Westworld is", wes.Character, "and would rate him a", wes.Rating, "out of 10.76")
 
-	u := family{
-		Names: "Georgina, Craig, Steven, Bradley, Lauren",
-
-		Ages: 70,
-
-		location: location{
-			Number: 90,
-			Street: "Bald Head",
-		},
-	}
-	fmt.Printf("%+v\n", u)
-
 	m := song{
 		Title:    "I want to make love to you",
 		Duration: 3.45,
