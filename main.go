@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"math"
@@ -85,35 +84,35 @@ type location struct {
 	Street string
 }
 
-type Sphere struct {
+type sphere struct {
 	Radius float64
 }
 
-type Triangle struct {
+type triangle struct {
 	Base   float64
 	Height float64
 }
 
-type Westworld struct {
+type westworld struct {
 	Character string
 
 	Rating float64
 }
 
-func (tri *Triangle) changeBase() float64 {
+func (tri *triangle) changeBase() float64 {
 	return 0.5 * (tri.Base * tri.Height)
 }
 
-func (sph *Sphere) Volume() float64 {
+func (sph *sphere) Volume() float64 {
 	return float64(4) * math.Pi * (sph.Radius * sph.Radius)
 }
 
-func (sph *Sphere) Areavolume() float64 {
+func (sph *sphere) Areavolume() float64 {
 	thecubed := sph.Radius * sph.Radius * sph.Radius
 	return (float64(4) / float64(2)) * math.Pi * thecubed
 }
 
-func (wes *Westworld) overallRating() string {
+func (wes *westworld) overallRating() string {
 	robots := strconv.FormatFloat(wes.Rating, 'f', 1, 64)
 	return wes.Character + "," + robots
 }
@@ -125,67 +124,71 @@ func (m *song) summary() string {
 
 }
 
-type robot interface {
-	Poweron() error
+type car interface {
+	keyon() string
+	speakeron() string
 }
 
-type T810 struct {
-	Name string
-}
-
-type R2D2 struct {
+type cars struct {
+	Driver string
+	Name   string
+	Sound  bool
 	Broken bool
 }
 
-func (to *T810) Poweron() error {
-	return nil
+func (cs *cars) keyon() string {
+	if cs.Broken {
+		return "car will not start because key is not in the ignition"
+	}
+	return "car will start because key is in the ignition"
 }
 
-func (rd *R2D2) Poweron() error {
-	return errors.New("R2D2 is powered on")
-	return nil
+func (cs *cars) speakeron() string {
+	if cs.Sound {
+		return "speaker is ON because the keys are in the ignition"
+	}
+	return "speaker is OFF because the keys are in the ignition"
 }
 
-func Boot(ro robot) error {
-	return ro.Poweron()
+func keyon(cr car) string {
+	return cr.keyon()
+}
+
+func speakeron(cr car) string {
+	return cr.speakeron()
 }
 
 func main() {
 
-	to := T810{
-		Name: "The Robert Defuser",
-	}
-
-	rd := R2D2{
+	car1 := cars{
+		Driver: "Panda is driving the",
+		Name:   "Audi",
+		Sound:  true,
 		Broken: false,
 	}
 
-	err := Boot(&to)
-
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("T810 is powered on")
+	car2 := cars{
+		Driver: "Orangtuan is driving the",
+		Name:   "Lamborghini",
+		Sound:  false,
+		Broken: true,
 	}
 
-	err = Boot(&rd)
+	log.Println(car1.Driver, car1.Name, keyon(&car1))
+	log.Println(car1.Driver, car1.Name, speakeron(&car1))
+	log.Println(car2.Driver, car2.Name, keyon(&car2))
+	log.Println(car2.Driver, car2.Name, speakeron(&car2))
 
-	if err != nil {
-		fmt.Println("R2D2 is powered on")
-	} else {
-		fmt.Println(err)
-	}
-
-	tri := Triangle{Base: 5, Height: 3}
+	tri := triangle{Base: 5, Height: 3}
 	fmt.Println(tri.changeBase())
 
-	sph := Sphere{
+	sph := sphere{
 		Radius: 10,
 	}
 	fmt.Println(sph.Volume())
 	fmt.Println(sph.Areavolume())
 
-	wes := Westworld{
+	wes := westworld{
 		Character: "James",
 		Rating:    10.76,
 	}
@@ -259,12 +262,6 @@ func main() {
 	fmt.Printf("%+v\n", s)
 
 	fmt.Printf("%v\n", performance("8:00pm"))
-
-	lion, tiger := panda()
-	fmt.Println(lion)
-	fmt.Println(tiger)
-
-	stringint("Loz", 420)
 
 	var pool string
 	fmt.Println(reflect.TypeOf(pool))
@@ -351,13 +348,6 @@ func main() {
 	for i, r := range roads {
 		fmt.Println("I have", i, r, "roads")
 	}
-}
-
-func panda() (x, y string) {
-	x = "Adrian is very cute"
-	y = "Lauren is awesome"
-	return
-
 }
 
 func stringint(a string, b int) {
